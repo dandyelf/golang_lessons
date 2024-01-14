@@ -19,27 +19,32 @@ type Recipes struct {
 	} `xml:"cake" json:"cake"`
 }
 
-type jsonfile string
-
-func parsFile(file_name string) (Recipes, error) {
-	file, _ := readFile(file_name)
+func ParsFile(file_name string, format string) (Recipes, error) {
+	file, err := ReadFile(file_name)
 	var base Recipes
-	var err error
-	if file_name == "*.json" {
+	if err != nil {
+
+		return base, fmt.Errorf("open file error: %w", err)
+	}
+	if format == "json" {
 		err = json.Unmarshal(file, &base)
-	} else if file_name == "*.xml" {
+	} else if format == "xml" {
 		err = xml.Unmarshal(file, &base)
+	} else {
+		return base, fmt.Errorf("unknown format: %w", err)
 	}
 	if err != nil {
+
 		return base, fmt.Errorf("pars file error: %w", err)
 	}
 
 	return base, nil
 }
 
-func readFile(file_name string) ([]byte, error) {
+func ReadFile(file_name string) ([]byte, error) {
 	file, err := os.ReadFile(file_name)
 	if err != nil {
+
 		return nil, fmt.Errorf("open file error: %w", err)
 	}
 
