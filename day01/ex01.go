@@ -25,7 +25,7 @@ func main() {
 
 		return
 	}
-	fmt.Println(db)
+	readdb.PrintRecipes(db, format)
 }
 
 func checkFormatFile(file_name string) (string, error) {

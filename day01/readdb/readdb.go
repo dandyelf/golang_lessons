@@ -50,3 +50,20 @@ func ReadFile(file_name string) ([]byte, error) {
 
 	return file, nil
 }
+
+func PrintRecipes(res Recipes, format string) {
+	if format == "xml" {
+		b, err := json.MarshalIndent(res, "", "  ")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Print(string(b))
+	}
+	if format == "json" {
+		b, err := xml.MarshalIndent(res, "", "  ")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Print(string(b))
+	}
+}
