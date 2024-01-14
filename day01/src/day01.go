@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -12,6 +14,18 @@ const (
 	maxAllowedNum = 100_000
 	minAllowedNum = -100_000
 )
+
+var (
+	flagMean, flagMedian, flagMode, flagSD bool
+)
+
+func init() {
+	flag.BoolVar(&flagMean, "mean", false, "Флаг для вывода значения Mean")
+	flag.BoolVar(&flagMedian, "median", false, "Флаг для вывода значения Median")
+	flag.BoolVar(&flagMode, "mode", false, "Флаг для вывода значения Mode")
+	flag.BoolVar(&flagSD, "sd", false, "Флаг для вывода значения SD")
+	flag.Parse()
+}
 
 // группа целых чисел от -100000 до 100000
 func main() {
@@ -29,23 +43,19 @@ func main() {
 		}
 		array = append(array, num)
 	}
-	// for i := 0; i < 5; i++ {
-	// 	fmt.Scan(&a)
-	// 	array[i] = a
-	// }
-	// max := array[0]
-	// for i := 0; i < 5; i++ {
-	// 	if array[i] > max {
-	// 		max = array[i]
-	// 	}
-	// }
-	// fmt.Println(max)
-
-	// a := Mean([]int{0, 1})
-	// a := Median([]int{0, 1})
-	// a := Mode([]int{0, 1, 3, 5, -9, 1, -9})
-	a := SD(array)
-	fmt.Println(a)
+	sort.Ints(array)
+	if flagMean {
+		fmt.Printf("Mean: %.2f\n", Mean(array))
+	}
+	if flagMedian {
+		fmt.Printf("Median: %.2f\n", Median(array))
+	}
+	if flagMode {
+		fmt.Printf("Mode: %d\n", Mode(array))
+	}
+	if flagSD {
+		fmt.Printf("SD: %.2f\n", SD(array))
+	}
 }
 
 func Mean(arr []int) float64 {
