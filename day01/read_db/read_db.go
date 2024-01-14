@@ -9,33 +9,32 @@ import (
 
 type Recipes struct {
 	Cake []struct {
-		Name        string `json:"name,omitempty"`
-		Time        string `json:"time,omitempty"`
+		Name        string `xml:"name" json:"name"`
+		Time        string `xml:"stovetime" json:"time"`
 		Ingredients []struct {
-			IngredientName  string `json:"ingredient_name,omitempty"`
-			IngredientCount string `json:"ingredient_count,omitempty"`
-			IngredientUnit  string `json:"ingredient_unit,omitempty"`
-		} `json:"ingredients,omitempty"`
-	} `json:"cake,omitempty"`
+			IngredientName  string `xml:"itemname" json:"ingredient_name"`
+			IngredientCount string `xml:"itemcount" json:"ingredient_count"`
+			IngredientUnit  string `xml:"itemunit" json:"ingredient_unit,omitempty"`
+		} `xml:"ingredients>item" json:"ingredients"`
+	} `xml:"cake" json:"cake"`
 }
 
-func (r *Recipes) RecipesRead {
+type jsonfile string
 
-}
-
-func readDb(file_name string) {
-	jsonFile, err := readFile(file_name)
-
-	var json_base RecipesJson
-
-	json.Unmarshal(jsonFile, &json_base)
-	for i := 0; i < len(json_base.Cake); i++ {
-		fmt.Println("User Type: " + json_base.Cake[i].Name)
-		fmt.Println("User Age: " + json_base.Cake[i].Time)
-		fmt.Println("User Name: " + json_base.Cake[i].Ingredients[i].IngredientName)
-		fmt.Println("Facebook Url: " + json_base.Cake[i].Ingredients[i].IngredientUnit)
+func parsFile(file_name string) (Recipes, error) {
+	file, _ := readFile(file_name)
+	var base Recipes
+	var err error
+	if file_name == "*.json" {
+		err = json.Unmarshal(file, &base)
+	} else if file_name == "*.xml" {
+		err = xml.Unmarshal(file, &base)
+	}
+	if err != nil {
+		return base, fmt.Errorf("pars file error: %w", err)
 	}
 
+	return base, nil
 }
 
 func readFile(file_name string) ([]byte, error) {
