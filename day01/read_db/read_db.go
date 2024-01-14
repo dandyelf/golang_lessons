@@ -1,0 +1,5 @@
+package readdb
+
+func readDb() {
+
+}
