@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 type Recipes struct {
@@ -20,6 +21,13 @@ type Recipes struct {
 }
 
 func ParsFile(file_name string, format string) (Recipes, error) {
+	format, err := checkFormatFile(*filename)
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return
+	}
+
 	file, err := ReadFile(file_name)
 	var base Recipes
 	if err != nil {
@@ -66,4 +74,20 @@ func PrintRecipes(res Recipes, format string) {
 		}
 		fmt.Print(string(b))
 	}
+}
+
+func checkFormatFile(file_name string) (string, error) {
+	if file_name == "" {
+
+		return "", fmt.Errorf("ошибка: отсутствует файл")
+	}
+	if filepath.Ext(file_name) == ".json" {
+
+		return "json", nil
+	}
+	if filepath.Ext(file_name) == ".xml" {
+
+		return "xml", nil
+	}
+	return "", fmt.Errorf("ошибка: файл должен быть json или xml")
 }
