@@ -4,15 +4,14 @@ import (
 	"day01/readdb"
 	"flag"
 	"fmt"
-	"path/filepath"
 )
 
 func main() {
 	filename := flag.String("f", "", "json or xml file")
 	flag.Parse()
-	fmt.Println(*filename)
+	// fmt.Println(*filename)
 
-	db, err := readdb.ParsFile(*filename, format)
+	db, err, format := readdb.ParsFile(*filename)
 	if err != nil {
 		fmt.Println(err.Error())
 
