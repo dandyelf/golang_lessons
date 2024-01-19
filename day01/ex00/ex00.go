@@ -6,7 +6,10 @@ import (
 	"fmt"
 )
 
-// example start
+type DBReader interface {
+	ReadDb() (db readdb.Recipes, err error)
+}
+
 type XmlDb struct {
 	filename string
 }
@@ -22,16 +25,6 @@ type JsonDb struct {
 func (c JsonDb) ReadDb() (db readdb.Recipes, err error) {
 	return
 }
-
-type DBReader interface {
-	ReadDb() (db readdb.Recipes, err error)
-}
-
-func WriteLog(s DBReader) (db readdb.Recipes, err error) {
-	return s.ReadDb()
-}
-
-// example end
 
 func main() {
 
@@ -52,4 +45,8 @@ func main() {
 	}
 	fmt.Println(db)
 	// readdb.PrintRecipes(db, format)
+}
+
+func WriteLog(s DBReader) (db readdb.Recipes, err error) {
+	return s.ReadDb()
 }
