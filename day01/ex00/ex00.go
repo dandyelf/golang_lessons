@@ -31,11 +31,20 @@ func main() {
 	filename := flag.String("f", "", "json or xml file")
 	flag.Parse()
 
-	xml := XmlDb{*filename}
-	db, err := WriteLog(xml)
+	format, err := readdb.CheckFormatFile(*filename)
 
-	// Инициализируем объект Count и передаём в WriteLog().
+	if err != nil {
+		fmt.Println(err.Error())
+
+		return base, err, format
+	}
+
+	file, err := ReadFile(file_name)
+
+	xml := XmlDb{*filename}
 	json := JsonDb{*filename}
+
+	db, err := WriteLog(xml)
 	db, err = WriteLog(json)
 	// fmt.Println(*filename)
 	if err != nil {

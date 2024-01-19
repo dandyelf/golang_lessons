@@ -23,7 +23,7 @@ type Recipes struct {
 func ParsFile(file_name string) (Recipes, error, string) {
 	var base Recipes
 	var format string
-	format, err := checkFormatFile(file_name)
+	format, err := CheckFormatFile(file_name)
 	if err != nil {
 		fmt.Println(err.Error())
 
@@ -78,7 +78,7 @@ func PrintRecipes(res Recipes, format string) {
 	}
 }
 
-func checkFormatFile(file_name string) (string, error) {
+func CheckFormatFile(file_name string) (string, error) {
 	if file_name == "" {
 
 		return "", fmt.Errorf("ошибка: отсутствует файл")
