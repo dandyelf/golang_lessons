@@ -20,35 +20,21 @@ type Recipes struct {
 	} `xml:"cake" json:"cake"`
 }
 
-func ParsFile(file_name string) (Recipes, error, string) {
-	var base Recipes
-	var format string
-	format, err := CheckFormatFile(file_name)
-	if err != nil {
-		fmt.Println(err.Error())
-
-		return base, err, format
-	}
-
-	file, err := ReadFile(file_name)
-	if err != nil {
-
-		return base, fmt.Errorf("open file error: %w", err), format
-	}
+func ParsFile(file []byte, format string) (db Recipes, err error) {
 	if format == "json" {
-		err = json.Unmarshal(file, &base)
+		err = json.Unmarshal(file, &db)
 	} else if format == "xml" {
-		err = xml.Unmarshal(file, &base)
+		err = xml.Unmarshal(file, &db)
 	} else {
-
-		return base, fmt.Errorf("unknown format: %w", err), format
+		err = fmt.Errorf("unknown format: %w", err)
+		return
 	}
 	if err != nil {
-
-		return base, fmt.Errorf("pars file error: %w", err), format
+		err = fmt.Errorf("pars file error: %w", err)
+		return
 	}
 
-	return base, nil, format
+	return
 }
 
 func ReadFile(file_name string) ([]byte, error) {
@@ -81,7 +67,7 @@ func PrintRecipes(res Recipes, format string) {
 func CheckFormatFile(file_name string) (string, error) {
 	if file_name == "" {
 
-		return "", fmt.Errorf("ошибка: отсутствует файл")
+		return "", fmt.Errorf("no file found")
 	}
 	if filepath.Ext(file_name) == ".json" {
 
@@ -91,5 +77,5 @@ func CheckFormatFile(file_name string) (string, error) {
 
 		return "xml", nil
 	}
-	return "", fmt.Errorf("ошибка: файл должен быть json или xml")
+	return "", fmt.Errorf("only json or xml")
 }
